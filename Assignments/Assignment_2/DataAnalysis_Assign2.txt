@@ -1,0 +1,37 @@
+list.files(path = "Data/", pattern = "\\.csv$", full.names = TRUE)
+#path = "Data/" specifies the directory where we are searching for files.
+#pattern = "\\.csv$" filters files to only those that end in .csv. The double backslash (\\) is necessary to escape the period since it's a special character in regular expressions.
+#full.names = TRUE gives the full path to the files, not just their names.
+
+csv_files = list.files(path = "Data/", pattern = "\\.csv$", full.names = TRUE)
+#all files that end in .csv are stored in an object called csv.files.
+
+length(csv_files)
+#32 files match the description.
+
+read.csv('Data/wingspan_vs_mass.csv')
+df = read.csv('Data/wingspan_vs_mass.csv')
+#all file contents stored as object 'df'
+
+head(df, 5)
+#head(x, n); x = obj name; n = #of lines
+
+list.files(path = 'Data/', pattern = '^b', recursive = TRUE, full.names = TRUE)
+#pattern = "^b" looks for files that begin with the letter "b" (the ^ indicates the start of the filename).
+#recursive = TRUE tells R to search through all subdirectories of Data/.
+
+b_files = list.files(path = 'Data/', pattern = '^b', recursive = TRUE, full.names = TRUE)
+#all files that begin with b are stored in object b_files.
+
+for (file in b_files) {
+  first_line <- read.csv(file, nrows = 1)
+  print(first_line)
+}
+#This loop will Iterate over each file in b_files, Read the first row of the file, and Print the first line of each file.
+
+for (file in csv_files) {
+  first_line <- read.csv(file, nrows = 1)
+  print(first_line)
+}
+#This loop works the same way as the previous one.
+
