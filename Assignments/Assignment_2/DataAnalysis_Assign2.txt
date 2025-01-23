@@ -23,15 +23,22 @@ list.files(path = 'Data/', pattern = '^b', recursive = TRUE, full.names = TRUE)
 b_files = list.files(path = 'Data/', pattern = '^b', recursive = TRUE, full.names = TRUE)
 #all files that begin with b are stored in object b_files.
 
+getwd()
+#shows current directory. I needed to search files within the Data_Course_ALLRED directory. I will set this as my directory in the for-loop.
+
 for (file in b_files) {
-  first_line <- read.csv(file, nrows = 1)
+  setwd('/Users/winni/Data_Course_ALLRED')
+  first_line <- readLines(file, n = 1)
   print(first_line)
 }
 #This loop will Iterate over each file in b_files, Read the first row of the file, and Print the first line of each file.
 
 for (file in csv_files) {
-  first_line <- read.csv(file, nrows = 1)
+  setwd('/Users/winni/Data_Course_ALLRED')
+  first_line <- readLines(file, n = 1)
   print(first_line)
 }
 #This loop works the same way as the previous one.
 
+b_files
+readLines('Data/data-shell/data/pdb/benzaldehyde.pdb', n= 1)
