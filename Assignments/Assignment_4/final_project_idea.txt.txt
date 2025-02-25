@@ -1,4 +1,4 @@
-For my final project, I plan to use data from Kaggle titled ‘Brain weight in humans.’
+2. For my final project, I plan to use data from Kaggle titled ‘Brain weight in humans.’
 I plan to analyze the data, show the distribution of head size and brain weight between males/ females and the different age ranges, and perhaps attempt to make predictions based on the data that is available. I may even analyze the data according to multiple criteria, such as female and greater than 18 years old.
-The data that I found has 237 rows and 4 columns (sex, age range (<18yo and >18yo), head size (cm^3), and brain weight (g)).
+3. The data that I found has 237 rows and 4 columns (sex, age range (<18yo and >18yo), head size (cm^3), and brain weight (g)).
 
