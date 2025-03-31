@@ -1,0 +1,91 @@
+#Library####
+
+#have to make sure tidyr and dplyr are not active if I am going to clean names.
+#the tibble, tidyr and dplyr packages conflict and convert the data set to a data.frame rather than a tibble.
+library(tidyverse)
+library(readr)
+library(janitor)
+
+##Load Dat####
+
+dat <- read_csv('Utah_Religions_by_County.csv')
+class(dat)
+
+###Clean Dat####
+clean_names_dat <- dat %>% 
+  clean_names()
+View(clean_names_dat)
+
+#need to pivot longer; create new column 'religion', inputing the data into another column titled 'pop_prop'
+#need to pivot longer again; new column 'belief_type'; values_to 'pop_prop'
+library(tidyr)
+names(clean_names_dat)
+
+longer_dat <- clean_names_dat %>% 
+  pivot_longer(cols = c(assemblies_of_god, episcopal_church, pentecostal_church_of_god, greek_orthodox, lds, southern_baptist_convention, united_methodist_church, buddhism_mahayana, catholic, evangelical, muslim, non_denominational, orthodox),
+               names_to = 'religion',
+               values_to = 'religion_prop') %>% 
+  pivot_longer(cols = c(religious, non_religious),
+               names_to = 'belief_type',
+               values_to = 'pop_prop')
+
+View(longer_dat)
+
+####Explore Dat####
+
+library(ggplot2)
+library(GGally)
+library(dplyr)
+
+ggpairs(longer_dat)#county col. too large for threshold. Can expand threshold or remove county col. 
+
+filter_dat <- longer_dat %>% 
+  select(-county)
+
+ggpairs(filter_dat)
+
+#“Does population of a county correlate with the proportion of any specific religious group in that county?”
+
+longer_dat %>% 
+  ggplot(aes(x = pop_2010,
+             y = religion_prop))+
+  geom_point()+
+  theme_minimal()
+#there doesn't seem to be an apparent relationship.
+
+library(easystats)
+
+mod <- glm(data = longer_dat,
+           formula = religion_prop ~ pop_2010)
+summary(mod)#very high p-value (0.9004).
+
+cor_test <- cor.test(longer_dat$pop_2010, longer_dat$religion_prop, method = 'pearson')
+cor_test
+#cor = 0.00456343
+
+#very weak or no relationship between county population and religion proportions, as the pearson correlation coefficient is very close to zero.
+#The p-value indicates that there is no statistical significance, and there is little evidence to support a relationship between the two variables.
+
+#“Does proportion of any specific religion in a given county correlate with the proportion of non-religious people?”
+filter_dat2 <- longer_dat %>% 
+  filter(belief_type == 'non_religious')
+
+filter_dat2 %>% 
+  ggplot(aes(x = pop_prop,
+             y = religion_prop))+
+  geom_point()+
+  facet_wrap(~ religion)+
+  theme_minimal()
+#There could be weak correlation with at least 1 religion proportion.
+
+mod2 <- glm(data = filter_dat2,
+           formula = pop_prop ~ religion_prop)
+summary(mod2)
+
+cor_test2 <- cor.test(filter_dat2$pop_prop, filter_dat2$religion_prop, method = 'pearson')
+cor_test2
+#correlation coefficient = -0.04396084
+#p-value = 0.395
+#very weak or no relationship between proportion of any specific religion and non-religion proportions, as the pearson correlation coefficient is very close to zero.
+#The p-value indicates that there is no statistical significance, and there is little evidence to support a relationship between the two variables.
+
