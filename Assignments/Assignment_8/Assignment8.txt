@@ -1,0 +1,29 @@
+Winnie Allred
+Task 1: Based on the ‘Predicted vs Actual Growth Rate’ plot, there are no obvious scientifically meaningless predictions. For example, none of the predicted growth rates are negative. However, the real data shows max values in the 600 range, whereas the model never predicts values greater than the 200s. This  means that the model seems to consistently underpredict high actual values. This is a limitation, but it does not make predictions scientifically meaningless. 
+
+Task 2: Yes, I did consistently find non-linear relationships. 
+https://www.geeksforgeeks.org/polynomial-regression-in-r-programming/
+
+Task 3:
+library(tidyverse)
+library(readr)
+
+dat <- read_csv("non_linear_relationship.csv")
+View(dat)
+
+mod <- lm(data = dat,
+          formula = response ~ poly(predictor, 5, raw = T))
+summary(mod)
+
+pred <- predict(mod)
+pred
+
+modelPerformance = data.frame(RMSE = RMSE(pred, dat$response),
+                              R2 = R2(pred, dat$response))
+print(lm(response ~ predictor + I(predictor^2), data = dat))
+print(modelPerformance)
+
+dat %>% 
+  ggplot(aes(x = predictor, y = response))+
+  geom_point()+
+  stat_smooth(method = lm, formula = y ~ poly(x, 5, raw = T))
